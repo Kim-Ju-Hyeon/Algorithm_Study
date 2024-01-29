@@ -18,35 +18,31 @@ paper = [[0] * 102 for _ in range(102)]
 dr = [0, 0, 1, -1]
 dc = [1, -1, 0, 0]
 
+
 # 여기서부터 작성
-def check_corner(rr, cc):
-    direc = []
-    if paper[rr][cc] == 0:
-        return False
-
-    for i in range(4):
-        nr = rr + dr[i]
-        nc = cc + dc[i]
-        if paper[nr][nc] == 0:
-            direc.append((nr, nc))
-    if len(direc) == 2:
-        return direc
-    else:
-        return False
-
 def solution():
     for c, r in info:
         for i in range(c, c + 10):
             for j in range(r, r + 10):
-                paper[i][j] = 1
+                paper[j][i] = 1
 
-    for row in range(100):
-        for col in range(100):
+    for row in range(102):
+        for col in range(102):
             if paper[row][col] == 1:
-                for i in range(4):
-                    nr = row + dr[i]
-                    nc = col + dc[i]
+                paper[row][col] = paper[row-1][col] + 1
 
+    max_area = 0
+    for row in range(102):
+        for sc in range(102):
+            height = 1e99
+            if paper[row][sc] == 0:
+                continue
+            for ec in range(sc, 102):
+                height = min(height, paper[row][ec])
+                if height == 0:
+                    break
+                area = height * (ec - sc + 1)
+                max_area = max(area, max_area)
+    return max_area
 
-
-    return edge
+print(solution())
