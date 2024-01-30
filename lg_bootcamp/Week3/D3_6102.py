@@ -37,5 +37,33 @@ def solution_2():
 
     return count
 
+def solution_3():
+    check = [0] * 21
+    count = 0
+
+    window = deque()
+    for i in range(K+1):
+        name_length = len(names[i])
+        count += check[name_length]
+
+        window.append(name_length)
+        check[name_length] += 1
+
+    for i in range(K+1, len(names)):
+        rem = window.popleft()
+        check[rem] -= 1
+
+        name_length = len(names[i])
+        count += check[name_length]
+
+        window.append(name_length)
+        check[name_length] += 1
+
+    return count
+
+
+
+
+
 # 출력하는 부분
-print(solution_2())
+print(solution_3())
