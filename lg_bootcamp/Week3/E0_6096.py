@@ -36,7 +36,6 @@ def check(distance):
 
 
 def solution():
-	intvals.sort()
     s = 1
     e = max(intvals, key=lambda x: x[1])[1]
     sol = -1
