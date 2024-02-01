@@ -38,10 +38,10 @@ def check2(num_i, num_j):
 
 
 def solution(S, E):
-    num = min(S, E)
+    num = 1000
     num_list = []
 
-    while num <= max(S, E):
+    while num <= 9999:
         if is_prime(num):
             num_list.append(num)
         num += 1
@@ -100,4 +100,4 @@ def solution2(S, E):
                 visited[next_station] = True
 
 
-print(solution2(S, E))
+print(solution(S, E))
