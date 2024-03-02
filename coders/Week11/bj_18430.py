@@ -33,4 +33,39 @@ def solution():
 
     return answer
 
-print(solution())
+
+# prefix sum
+def solution2():
+    answer = 0
+
+    prefix_sum = [0] * N
+    prefix_sum[0] = line[0]
+
+    for i in range(1,N):
+        prefix_sum[i] = prefix_sum[i-1] + line[i]
+
+    # case 1 - move honey, fix bees
+    for i in range(1, N-1):
+        bee_1 = prefix_sum[i] - prefix_sum[0]
+        bee_2 = prefix_sum[N-1-1] - prefix_sum[i-1]
+
+        answer = max(answer, bee_1+bee_2)
+
+    # case 2 - fix left bee, right honey
+    for i in range(1, N - 1):
+        bee_1 = prefix_sum[-1] - line[i] - line[0]
+        bee_2 = prefix_sum[-1] - prefix_sum[i]
+
+        answer = max(answer, bee_1 + bee_2)
+    
+    # case 3 - fix left honey, right bee
+    for i in range(1, N - 1):
+        bee_1 = prefix_sum[-1] - line[i] - line[-1]
+        bee_2 = prefix_sum[i-1]
+
+        answer = max(answer, bee_1 + bee_2)
+
+    return answer
+
+
+print(solution2())
