@@ -1,71 +1,62 @@
 import sys
 
+
 def input():
     return sys.stdin.readline()
 
 
-N = int(input())
-line = list(map(int, input().split()))
+N, M = map(int, input().split())
+grid = [list(map(int, input().split())) for _ in range(N)]
 
-def solution():
-    answer = 0
+answer = [0]
+d = [[(0, -1), (1, 0)], [(-1, 0), (0, -1)], [(-1, 0), (0, 1)], [(0, 1), (1, 0)]]
 
-    # case 1
-    for i in range(1, N-1):
-        bee_1 = sum(line[1:i+1])
-        bee_2 = sum(line[i:N-1])
+chk = [[False] * M for _ in range(N)]
 
-        answer = max(answer, bee_1+bee_2)
+def dfs(cur_row, cur_col, cur_sum):
+    answer[0] = max(answer[0], cur_sum)
 
-    # case 2
-    for i in range(1, N - 1):
-        bee_1 = sum(line[1:]) - line[i]
-        bee_2 = sum(line[i+1:])
-
-        answer = max(answer, bee_1 + bee_2)
-
-    # case 3
-    for i in range(1, N - 1):
-        bee_1 = sum(line[:N-1]) - line[i]
-        bee_2 = sum(line[:i])
-
-        answer = max(answer, bee_1 + bee_2)
-
-    return answer
-
-
-# prefix sum
-def solution2():
-    answer = 0
-
-    prefix_sum = [0] * N
-    prefix_sum[0] = line[0]
-
-    for i in range(1,N):
-        prefix_sum[i] = prefix_sum[i-1] + line[i]
-
-    # case 1 - move honey, fix bees
-    for i in range(1, N-1):
-        bee_1 = prefix_sum[i] - prefix_sum[0]
-        bee_2 = prefix_sum[N-1-1] - prefix_sum[i-1]
-
-        answer = max(answer, bee_1+bee_2)
-
-    # case 2 - fix left bee, right honey
-    for i in range(1, N - 1):
-        bee_1 = prefix_sum[-1] - line[i] - line[0]
-        bee_2 = prefix_sum[-1] - prefix_sum[i]
-
-        answer = max(answer, bee_1 + bee_2)
+    if cur_col == M:
+        cur_row += 1
+        cur_col = 0
     
-    # case 3 - fix left honey, right bee
-    for i in range(1, N - 1):
-        bee_1 = prefix_sum[-1] - line[i] - line[-1]
-        bee_2 = prefix_sum[i-1]
+    n_row = cur_row
+    n_col = cur_col + 1
 
-        answer = max(answer, bee_1 + bee_2)
+    if cur_row == N:
+        answer[0] = max(answer[0], cur_sum)
+        return
 
-    return answer
+    if not chk[cur_row][cur_col]:
+        for i in range(4):
+            n = d[i]
+            nr_1 = cur_row + n[0][0]
+            nc_1 = cur_col + n[0][1]
+            nr_2 = cur_row + n[1][0]
+            nc_2 = cur_col + n[1][1]
+
+            if nr_1 < 0 or nr_1 >= N: continue
+            if nc_1 < 0 or nc_1 >= M: continue
+            if nr_2 < 0 or nr_2 >= N: continue
+            if nc_2 < 0 or nc_2 >= M: continue
+
+            if chk[nr_1][nc_1]: continue
+            if chk[nr_2][nc_2]: continue
+
+            new_sum = 2 * grid[cur_row][cur_col] + grid[nr_1][nc_1] + grid[nr_2][nc_2]
+
+            chk[cur_row][cur_col] = True
+            chk[nr_1][nc_1] = True
+            chk[nr_2][nc_2] = True
+
+            dfs(n_row, n_col, cur_sum + new_sum)
+
+            chk[cur_row][cur_col] = False
+            chk[nr_1][nc_1] = False
+            chk[nr_2][nc_2] = False
+
+    dfs(n_row, n_col, cur_sum)
 
 
-print(solution2())
+dfs(0, 0, 0)
+print(answer[0])

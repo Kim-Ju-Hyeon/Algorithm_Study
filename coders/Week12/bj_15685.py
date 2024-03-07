@@ -20,24 +20,27 @@ def solution():
     def rotate_90(_dragon_curve):
         y, x = _dragon_curve[-1]
         for ny, nx in _dragon_curve[::-1][1:]:
-            dy = ny - y
-            dx = nx - x
+            dy = y - ny
+            dx = x - nx
 
-            if dy <= 0 and dx <= 0:
-                ry = y - abs(dx)
-                rx = x + abs(dy)
+            rx = x + dy
+            ry = y - dx
 
-            elif dy <= 0 and dx >= 0:
-                ry = y + abs(dx)
-                rx = x + abs(dy)
+            # if dy <= 0 and dx <= 0:
+            #     ry = y - abs(dx)
+            #     rx = x + abs(dy)
 
-            elif dy >= 0 and dx >= 0:
-                ry = y + abs(dx)
-                rx = x - abs(dy)
+            # elif dy <= 0 and dx >= 0:
+            #     ry = y + abs(dx)
+            #     rx = x + abs(dy)
 
-            else:
-                ry = y - abs(dx)
-                rx = x - abs(dy)
+            # elif dy >= 0 and dx >= 0:
+            #     ry = y + abs(dx)
+            #     rx = x - abs(dy)
+
+            # else:
+            #     ry = y - abs(dx)
+            #     rx = x - abs(dy)
 
             _dragon_curve.append((ry, rx))
 
